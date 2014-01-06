@@ -88,6 +88,13 @@ pim_read<-function(file, samp_year=NA, samp_season=NA){
         stop(cat(file,": Metadata transect number can not be coerced to an integer."))
     }
     
+    #gettting the notes
+    if(str_detect(tolower(str_trim(datameta[1,3])), '^note')){
+        notes<- datameta[1,4]
+    }else{
+        notes <- "NA"
+    }
+    
     #Are there equal number of S and C columns and if so what are the number of steps
     steps<-length(dat[,3:ncol(dat)])/2
     if(check_integer(steps)!=TRUE){
@@ -124,8 +131,9 @@ pim_read<-function(file, samp_year=NA, samp_season=NA){
     outmdate <- str_trim(datameta[2,2])
     outmass <- str_trim(datameta[3,2])
     outmtrans <- as.integer(str_trim(datameta[4,2]))
+    outnotes <- str_trim(notes)
     
-    metadataout <- data.frame('Year' = outsamp_year, 'Season' = outsamp_season,'Method Code' = outmeth, 'Sampling Unit ID' = outmsu, 'Start Date (YYYY/MM/DD)' = outmdate, 'Assessor'= outmass, 'Assessors Transect Number' = outmtrans, stringsAsFactors=F)
+    metadataout <- data.frame('Year' = outsamp_year, 'Season' = outsamp_season,'Method Code' = outmeth, 'Sampling Unit ID' = outmsu, 'Start Date (YYYY/MM/DD)' = outmdate, 'Assessor'= outmass, 'Assessors Transect Number' = outmtrans, 'Notes' = outnotes, stringsAsFactors=F)
     
     outnrow <- steps*nrow(dat)
     outsamp_year <- rep(samp_year, times=outnrow)
